@@ -1,12 +1,13 @@
 package fracdex
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func TestBasics(t *testing.T) {
+func TestKeys(t *testing.T) {
 	assert := assert.New(t)
 
 	test := func(a, b, exp string) {
@@ -51,4 +52,29 @@ func TestBasics(t *testing.T) {
 	test("a00", "a1", "invalid order key: a00")
 	test("0", "1", "invalid order key head: 0")
 	test("a1", "a0", "a1 >= a0")
+}
+
+func TestNKeys(t *testing.T) {
+	assert := assert.New(t)
+
+	test := func(a, b string, n uint, exp string) {
+		actSlice, err := NKeysBetween(a, b, n)
+		act := strings.Join(actSlice, " ")
+		if err != nil {
+			assert.Equal("", act)
+			assert.Equal(exp, err.Error())
+		} else {
+			assert.Nil(err)
+			assert.Equal(exp, act)
+		}
+	}
+	test("", "", 5, "a0 a1 a2 a3 a4")
+	test("a4", "", 10, "a5 a6 a7 a8 a9 aA aB aC aD aE")
+	test("", "a0", 5, "Zv Zw Zx Zy Zz")
+	test(
+		"a0",
+		"a2",
+		20,
+		"a04 a08 a0G a0K a0O a0V a0Z a0d a0l a0t a1 a14 a18 a1G a1O a1V a1Z a1d a1l a1t",
+	)
 }

@@ -278,3 +278,82 @@ func decrementInt(x string) (string, error) {
 
 	return head + strings.Join(digs, ""), nil
 }
+
+// NKeysBetween returns n keys between a and b that sorts lexicographically.
+// Either a or b can be empty strings. If a is empty it indicates smallest key,
+// If b is empty it indicates largest key.
+// b must be empty string or > a.
+func NKeysBetween(a, b string, n uint) ([]string, error) {
+	if n == 0 {
+		return []string{}, nil
+	}
+	if n == 1 {
+		c, err := KeyBetween(a, b)
+		if err != nil {
+			return nil, err
+		}
+		return []string{c}, nil
+	}
+	if b == "" {
+		c, err := KeyBetween(a, b)
+		if err != nil {
+			return nil, err
+		}
+		result := make([]string, 0, n)
+		result = append(result, c)
+		for i := 0; i < int(n)-1; i++ {
+			c, err = KeyBetween(c, b)
+			if err != nil {
+				return nil, err
+			}
+			result = append(result, c)
+		}
+		return result, nil
+	}
+	if a == "" {
+		c, err := KeyBetween(a, b)
+		if err != nil {
+			return nil, err
+		}
+		result := make([]string, 0, n)
+		result = append(result, c)
+		for i := 0; i < int(n)-1; i++ {
+			c, err = KeyBetween(a, c)
+			if err != nil {
+				return nil, err
+			}
+			result = append(result, c)
+		}
+		reverse(result)
+		return result, nil
+	}
+	mid := n / 2
+	c, err := KeyBetween(a, b)
+	if err != nil {
+		return nil, err
+	}
+	result := make([]string, 0, n)
+	{
+		r, err := NKeysBetween(a, c, mid)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, r...)
+	}
+	result = append(result, c)
+	{
+		r, err := NKeysBetween(c, b, n-mid-1)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, r...)
+	}
+	return result, nil
+}
+
+func reverse(values []string) {
+	for i := 0; i < len(values)/2; i++ {
+		j := len(values) - i - 1
+		values[i], values[j] = values[j], values[i]
+	}
+}
