@@ -37,7 +37,7 @@ func main() {
 	zeroth, _ := fracdex.KeyBetween("", first) // "Zz"
 	fmt.Println(zeroth)
 
-	// Insert in between 2nd and 3rd. Midpoint
+	// Insert in between 2nd and 3rd
 	secondAndHalf, _ := fracdex.KeyBetween(second, third) // "a1V"
 	fmt.Println(secondAndHalf)
 }
