@@ -9,3 +9,36 @@ Fractional indexing is a technique to create an ordering that can be used for [R
 This implementation includes variable-length strings, and the prepend/append optimization described in David's article.
 
 This should be byte-for-byte compatible with https://github.com/roci.dev/fractional-indexing.
+
+## Example
+
+```go
+package main
+
+import (
+	"fmt"
+
+	"roci.dev/fracdex"
+)
+
+func main() {
+	first, _ := fracdex.KeyBetween("", "") // a0
+	fmt.Println(first)
+
+	// Insert after 1st
+	second, _ := fracdex.KeyBetween(first, "") // "a1"
+	fmt.Println(second)
+
+	// Insert after 2nd
+	third, _ := fracdex.KeyBetween(second, "") // "a2"
+	fmt.Println(third)
+
+	// Insert before 1st
+	zeroth, _ := fracdex.KeyBetween("", first) // "Zz"
+	fmt.Println(zeroth)
+
+	// Insert in between 2nd and 3rd. Midpoint
+	secondAndHalf, _ := fracdex.KeyBetween(second, third) // "a1V"
+	fmt.Println(secondAndHalf)
+}
+```
