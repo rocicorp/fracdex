@@ -1,6 +1,7 @@
 package fracdex
 
 import (
+	"math"
 	"strings"
 	"testing"
 
@@ -77,4 +78,39 @@ func TestNKeys(t *testing.T) {
 		20,
 		"a04 a08 a0G a0K a0O a0V a0Z a0d a0l a0t a1 a14 a18 a1G a1O a1V a1Z a1d a1l a1t",
 	)
+}
+
+func TestToFloat64Approx(t *testing.T) {
+	assert := assert.New(t)
+
+	test := func(key string, exp float64, expErr string) {
+		act, err := Float64Approx(key)
+		if expErr != "" {
+			assert.Equal(0.0, act)
+			assert.Equal(expErr, err.Error())
+		} else {
+			assert.Equal(exp, act)
+			assert.NoError(err)
+		}
+	}
+
+	test("a0", 0.0, "")
+	test("a1", 1.0, "")
+	test("az", 61.0, "")
+	test("b10", 62.0, "")
+	test("z20000000000000000000000000", math.Pow(62.0, 25.0)*2.0, "")
+	test("Z1", -1.0, "")
+	test("Zz", -61.0, "")
+	test("Y10", -62.0, "")
+	test("A20000000000000000000000000", math.Pow(62.0, 25.0)*-2.0, "")
+
+	test("a0V", 0.5, "")
+	test("a00V", 31.0/math.Pow(62.0, 2.0), "")
+	test("aVV", 31.5, "")
+	test("ZVV", -31.5, "")
+
+	test("", 0.0, "invalid order key")
+	test("!", 0.0, "invalid order key head: !")
+	test("a400", 0.0, "invalid order key: a400")
+	test("a!", 0.0, "invalid order key: a!")
 }
