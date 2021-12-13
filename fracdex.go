@@ -138,7 +138,10 @@ func midpoint(a string, b string) string {
 
 	// first digits are consecutive
 	if len(b) > 1 {
-		return b[0:1]
+		if b[0] != '0' {
+			return b[0:1]
+		}
+		return string(base62Digits[digitA]) + midpoint("", b[1:])
 	}
 
 	// `b` is empty or has length 1 (a single digit).
