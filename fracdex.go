@@ -108,16 +108,19 @@ func midpoint(a string, b string) string {
 		// go.  note that we don't need to pad `b`, because it can't
 		// end before `a` while traversing the common prefix.
 		i := 0
-		for ; i < len(a); i++ {
-			c := byte(0)
+		for ; i < len(b); i++ {
+			c := byte('0')
 			if len(a) > i {
 				c = a[i]
 			}
-			if i >= len(b) || c != b[i] {
+			if c != b[i] {
 				break
 			}
 		}
 		if i > 0 {
+			if i > len(a) {
+				return b[0:i] + midpoint("", b[i:])
+			}
 			return b[0:i] + midpoint(a[i:], b[i:])
 		}
 	}

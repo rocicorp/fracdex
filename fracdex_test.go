@@ -41,6 +41,7 @@ func TestKeys(t *testing.T) {
 	test("Zz", "a01", "a0")
 	test("", "a0V", "a0")
 	test("", "b999", "b99")
+	test("aV", "aV0V", "aV0G")
 	test(
 		"",
 		"A00000000000000000000000000",
