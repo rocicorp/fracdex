@@ -1,4 +1,4 @@
-module roci.dev/fracdex
+module github.com/getoutreach/fracdex
 
 go 1.14
 
