@@ -163,7 +163,7 @@ func validateInt(i string) error {
 		return err
 	}
 	if len(i) != exp {
-		return fmt.Errorf("invalid integer part of order key: %s" + i)
+		return fmt.Errorf("invalid integer part of order key: %s", i)
 	}
 	return nil
 }
